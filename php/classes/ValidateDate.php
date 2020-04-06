@@ -1,5 +1,5 @@
 <?php
-namespace Russell-Dorgan/object-oriented;
+namespace RussellDorgan\ObjectOriented;
 /**
  * Trait to Validate a mySQL Date
  *

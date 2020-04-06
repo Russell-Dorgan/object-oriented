@@ -1,5 +1,5 @@
 <?php
-namespace Russell-Dorgan/object-oriented;
+namespace RussellDorgan\ObjectOriented;
 require_once(dirname(__DIR__, 2) . "/vendor/autoload.php");
 use Ramsey\Uuid\Uuid;
 /**
