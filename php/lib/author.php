@@ -13,4 +13,5 @@ $authorHash = "a_super_hash";
 $authorUsername = "thenewusername3";
 $author =  new Author($authorId, $authorActivationCode, $authorAvatarUrl, $authorEmail, $authorHash, $authorUsername);
 
-var_dump($author);
+//var_dump($author->getAuthorHash());
+echo "<h2>" . $author->getAuthorEmail() . "</h2>";
