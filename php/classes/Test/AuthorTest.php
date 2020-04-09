@@ -13,9 +13,9 @@ class AuthorTest extends DataDesignTest {
 
 	private $VALID_ACTIVATION_TOKEN; //this will be done in the setup.
 	private $VALID_AVATAR_URL = "https://avatar.org";
-	private $VALID_AUTHOR_EMAIL = "myfakeemail@somewhere.come";
+	private $VALID_AUTHOR_EMAIL = "youremail@email.com";
 	private $VALID_AUTHOR_HASH; //this will be done in the setup.
-	private $VALID_USERNAME = "thenewusername3";
+	private $VALID_USERNAME = "your_username";
 
 	public function setUp() : void {
 		parent::setUp();
