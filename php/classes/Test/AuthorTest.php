@@ -21,7 +21,7 @@ class AuthorTest extends DataDesignTest {
 		parent::setUp();
 
 		$password = "your_password";
-		$this->VALID_AUTHOR_HASH = password_hash($password, PASSWORD_ARON2I, ["time_cost" => 45]);
+		$this->VALID_AUTHOR_HASH = password_hash($password, PASSWORD_ARGON2I, ["time_cost" => 45]);
 		$this->VALID_ACTIVATION_TOKEN = bin2hex(random_bytes(16));
 	}
 
