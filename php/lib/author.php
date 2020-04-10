@@ -3,18 +3,19 @@ namespace RussellDorgan\ObjectOriented;
 require_once(dirname(__DIR__, 1) . "/classes/Author.php");
 
 
-// The pdo object has been created for you.
-//require_once("/etc/apache2/capstone-mysql/Secrets.php");
-//$secrets =  new Secrets("/etc/apache2/capstone-mysql/cohort28/cfiniello.ini");
-//$pdo = $secrets->getPdoObject();
-use RussellDorgan\ObjectOriented\Author;
-$authorId = "006fb097-31bf-4ead-95a6-717c46e1c7f6";
-$authorActivationCode = "the_NEW_activation_code";
-$authorAvatarUrl = "https://avatar.org";
-$authorEmail = "myfakeemail@somewhere.com";
-$authorHash = "a_super_hash";
-$authorUsername = "thenewusername3";
-$author =  new Author($authorId, $authorActivationCode, $authorAvatarUrl, $authorEmail, $authorHash, $authorUsername);
+$authorId = "1f08aa8b-2169-4c19-a260-b9e80cad9234";
+$authorActivationToken = bin2hex(random_bytes(16));
+$authorAvatarUrl = "https://img.img.com/img";
+$authorEmail = "RussellDorgan@email.com";
+$authorHash = password_hash("password", PASSWORD_ARGON2ID, ["time_cost" => 9]);
+$authorUsername = "Russell Dorgan";
 
-//var_dump($author->getAuthorHash());
-echo "<h2>" . $author->getAuthorEmail() . "</h2>";
+$russell = new Author($authorId, $authorActivationToken, $authorAvatarUrl, $authorEmail, $authorHash, $authorUsername);
+echo $russell->getAuthorId() . " ***** ";
+echo $russell->getAuthorActivationToken() . " ***** ";
+echo $russell->getAuthorAvatarUrl() . " ***** ";
+echo $russell->getAuthorEmail() . " ***** ";
+echo $russell->getAuthorHash() . " ***** ";
+echo $russell->getAuthorUsername();
+
+
