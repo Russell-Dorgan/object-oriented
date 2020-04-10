@@ -142,7 +142,7 @@ class Author implements JsonSerializable {
 				throw(new InvalidArgumentException("author hash is not a valid hash"));
 			}
 			if(strlen($newAuthorHash) > 97) {
-				throw(new RangeException("Author hash is too long"));
+				throw(new RangeException("author hash is too long"));
 			}
 		} catch(InvalidArgumentException | RangeException | Exception | TypeError $exception) {
 			$exceptionType = get_class($exception);
