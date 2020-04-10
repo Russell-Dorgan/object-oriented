@@ -165,6 +165,94 @@ class Author implements \JsonSerializable {
 		$this->authorUsername = $newAuthorUsername;
 	}
 
+	public function insert(\PDO $pdo) : void {
+		$query = "INSERT INTO author(authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername) VALUES (:authorId, :authorActivationToken, :authorAvatarUrl, :authorEmail, :authorHash, :authorUsername)";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["authorId"=>$this->authorId->getBytes(), "authorActivationToken"=>$this->authorActivationToken, "authorAvatarUrl"=>$this->authorAvatarUrl, "authorEmail"=>$this->authorEmail, "authorHash"=>$this->authorHash, "authorUsername"=>$this->authorUsername];
+		$statement->execute($parameters);
+		}
+
+		public function delete(\PDO $pdo) : void {
+
+			$query = "DELETE FROM author WHERE authorId = authorId";
+			$statement = $pdo->prepare($query);
+
+			$parameters = ["authorId" => $this->authorId->getBytes()];
+			$statement->execute($parameters);
+		}
+
+	public function update(\PDO $pdo) : void {
+
+		// create query template
+		$query = "UPDATE author SET (authorActivationToken = :authorActivationToken, authorAvatarUrl = :authorAvatarUrl, authorEmail = :authorEmail, authorHash = :authorHash, authorUsername = authorUsername) WHERE authorId = author Id";
+		$statement = $pdo->prepare($query);
+
+		$parameters = ["authorId"=>$this->authorId->getBytes(), "authorActivationToken"=>$this->authorActivationToken, "authorAvatarUrl"=>$this->authorAvatarUrl, "authorEmail"=>$this->authorEmail, "authorHash"=>$this->authorHash, "authorUsername"=>$this->authorUsername];
+		$statement->execute($parameters);
+	}
+
+
+
+
+
+
+
+
+
+
+
+	public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
+
+		try {
+			$authorId = self::validateUuid($authorId);
+		} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+
+		// create query template
+		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author WHERE authorId = :authorId";
+		$statement = $pdo->prepare($query);
+
+		// bind the tweet id to the place holder in the template
+		$parameters = ["authorId" => $authorId->getBytes()];
+		$statement->execute($parameters);
+
+
+		try {
+			$author = null;
+			$statement->setFetchMode(\PDO::FETCH_ASSOC);
+			$row = $statement->fetch();
+			if($row !== false) {
+				$author = newAuthor($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"], $row["authorHash"], $row["authorUsername"]);
+			}
+		} catch(\Exception $exception) {
+			// if the row couldn't be converted, rethrow it
+			throw(new \PDOException($exception->getMessage(), 0, $exception));
+		}
+		return($author);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	public function jsonSerialize() {
 		$fields = get_object_vars($this);
 		$fields["authorId"] = $this->authorId->toString();
