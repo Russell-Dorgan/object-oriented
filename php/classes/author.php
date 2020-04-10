@@ -229,26 +229,22 @@ class Author implements \JsonSerializable {
 			throw(new \PDOException("author content is invalid"));
 		}
 
-		// escape any mySQL wild cards
 		$authorUsername = str_replace("_", "\\_", str_replace("%", "\\%", $authorUsername));
 
-		// create query template
-		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet WHERE tweetContent LIKE :tweetContent";
+		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author WHERE authorUsername LIKE :authorUsername";
 		$statement = $pdo->prepare($query);
 
-		// bind the tweet content to the place holder in the template
-		$tweetContent = "%$tweetContent%";
-		$parameters = ["tweetContent" => $tweetContent];
+		$authorUsername = "%$authorUsername%";
+		$parameters = ["authorUsername" => $authorUsername];
 		$statement->execute($parameters);
 
-		// build an array of tweets
-		$tweets = new \SplFixedArray($statement->rowCount());
+		$authors = new \SplFixedArray($statement->rowCount());
 		$statement->setFetchMode(\PDO::FETCH_ASSOC);
 		while(($row = $statement->fetch()) !== false) {
 			try {
-				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"], $row["tweetContent"], $row["tweetDate"]);
-				$tweets[$tweets->key()] = $tweet;
-				$tweets->next();
+				$author = new Author($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"], $row["authorHash"], $row["authorUsername"]);
+				$authors[$authors->key()] = $author;
+				$authors->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
 				throw(new \PDOException($exception->getMessage(), 0, $exception));
