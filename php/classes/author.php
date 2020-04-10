@@ -192,16 +192,6 @@ class Author implements \JsonSerializable {
 		$statement->execute($parameters);
 	}
 
-
-
-
-
-
-
-
-
-
-
 	public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
 
 		try {
@@ -210,11 +200,10 @@ class Author implements \JsonSerializable {
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 
-		// create query template
+
 		$query = "SELECT authorId, authorActivationToken, authorAvatarUrl, authorEmail, authorHash, authorUsername FROM author WHERE authorId = :authorId";
 		$statement = $pdo->prepare($query);
 
-		// bind the tweet id to the place holder in the template
 		$parameters = ["authorId" => $authorId->getBytes()];
 		$statement->execute($parameters);
 
@@ -227,21 +216,46 @@ class Author implements \JsonSerializable {
 				$author = newAuthor($row["authorId"], $row["authorActivationToken"], $row["authorAvatarUrl"], $row["authorEmail"], $row["authorHash"], $row["authorUsername"]);
 			}
 		} catch(\Exception $exception) {
-			// if the row couldn't be converted, rethrow it
+
 			throw(new \PDOException($exception->getMessage(), 0, $exception));
 		}
 		return($author);
 	}
 
+	public static function getAuthorByAuthorUsername(\PDO $pdo, string $authorUsername) : \SPLFixedArray{
+		$authorUsername = trim($authorUsername);
+		$authorUsername = filter_var($authorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($authorUsername) === true) {
+			throw(new \PDOException("author content is invalid"));
+		}
 
+		// escape any mySQL wild cards
+		$authorUsername = str_replace("_", "\\_", str_replace("%", "\\%", $authorUsername));
 
+		// create query template
+		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet WHERE tweetContent LIKE :tweetContent";
+		$statement = $pdo->prepare($query);
 
+		// bind the tweet content to the place holder in the template
+		$tweetContent = "%$tweetContent%";
+		$parameters = ["tweetContent" => $tweetContent];
+		$statement->execute($parameters);
 
-
-
-
-
-
+		// build an array of tweets
+		$tweets = new \SplFixedArray($statement->rowCount());
+		$statement->setFetchMode(\PDO::FETCH_ASSOC);
+		while(($row = $statement->fetch()) !== false) {
+			try {
+				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"], $row["tweetContent"], $row["tweetDate"]);
+				$tweets[$tweets->key()] = $tweet;
+				$tweets->next();
+			} catch(\Exception $exception) {
+				// if the row couldn't be converted, rethrow it
+				throw(new \PDOException($exception->getMessage(), 0, $exception));
+			}
+		}
+		return($tweets);
+	}
 
 
 
