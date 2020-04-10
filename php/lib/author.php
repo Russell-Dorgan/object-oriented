@@ -2,6 +2,8 @@
 namespace RussellDorgan\ObjectOriented;
 require_once(dirname(__DIR__, 1) . "/classes/Author.php");
 
+$secrets = new \Secrets("/etc/apache2/capstone-mysql/ddctwitter.ini");
+#pdo = $secrets->getPdoObject();
 
 $authorId = "1f08aa8b-2169-4c19-a260-b9e80cad9234";
 $authorActivationToken = bin2hex(random_bytes(16));
